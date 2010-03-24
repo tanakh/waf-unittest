@@ -33,20 +33,20 @@ Usage
 
 4. Build without unittests
 
-    ::
+   ::
     
         $ waf build
 
-4. Build with unittests and run it (updated only)
+5. Build with unittests and run it (updated only)
 
-    ::
+   ::
 
          $ waf build --check
 
-4. Build with unittests and run all tests
+6. Build with unittests and run all tests
 
-    ::
+   ::
 
         $ waf build --checkall
 
-5. Enjoy!
+7. Enjoy!
