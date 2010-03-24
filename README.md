@@ -23,4 +23,16 @@
             target = 'test',
             uselib_local = 'lib')
 
+* Build without unittests
+
+    $ waf build
+
+* Build with unittests and run it (updated only)
+
+    $ waf build --check
+
+* Build with unittests and run all tests
+
+    $ waf build --checkall
+
 * Enjoy!
