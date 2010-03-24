@@ -25,6 +25,17 @@ Usage
    ::
     
         def build(bld):
+            bld(features = 'cxx cprogram testt',
+                source = 'test.cpp',
+                includes = '.',
+                target = 'test',
+                uselib_local = 'lib',
+		uselib = 'gtest')
+
+   ::
+    
+        # autolink gtest_main
+        def build(bld):
             bld(features = 'cxx cprogram gtest',
                 source = 'test.cpp',
                 includes = '.',
