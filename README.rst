@@ -23,6 +23,7 @@ Usage
 3. Add your test program's feature to 'testt' or 'gtest'
 
 ::
+
     def build(bld):
         bld(features = 'cxx cprogram gtest',
             source = 'test.cpp',
@@ -32,14 +33,19 @@ Usage
 
 4a. Build without unittests
 
-	$ waf build
+::
+
+    $ waf build
 
 4b. Build with unittests and run it (updated only)
 
-	$ waf build --check
+::
+
+    $ waf build --check
 
 4c. Build with unittests and run all tests
 
-	$ waf build --checkall
+::
+    $ waf build --checkall
 
 5. Enjoy!
