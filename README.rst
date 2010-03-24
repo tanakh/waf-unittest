@@ -31,19 +31,19 @@ Usage
                 target = 'test',
                 uselib_local = 'lib')
 
-4a. Build without unittests
+4. Build without unittests
 
     ::
     
         $ waf build
 
-4b. Build with unittests and run it (updated only)
+4. Build with unittests and run it (updated only)
 
     ::
 
          $ waf build --check
 
-4c. Build with unittests and run all tests
+4. Build with unittests and run all tests
 
     ::
 
