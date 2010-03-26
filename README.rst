@@ -24,7 +24,7 @@ Usage
             conf.check_tool('compiler_cxx')
             conf.check_tool('unittestt')
 
-3. Add your test program's feature to 'testt' or 'gtest'
+3. Add 'testt' or 'gtest' to your test program's feature.
 
    ::
     
