@@ -6,6 +6,10 @@ Usage
 
 1. Copy unittestt.py to your project directory.
 
+   ::
+
+       $ wget http://github.com/tanakh/waf-unittest/raw/master/unittestt.py
+
 2. Add tool_options() and check_tool()
 
    ::
@@ -46,19 +50,19 @@ Usage
 
    ::
     
-        $ waf build
+       $ waf build
 
 5. Build with unittests and run it (updated only)
 
    ::
 
-         $ waf build --check
+       $ waf build --check
 
 6. Build with unittests and run all tests
 
    ::
 
-        $ waf build --checkall
+       $ waf build --checkall
 
 7. Build with a specified unittest and run it (always)
 
