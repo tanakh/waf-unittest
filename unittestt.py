@@ -23,12 +23,14 @@ def set_options(opt):
                    help = 'Execute unit tests')
     opt.add_option('--checkall', action = 'store_true', default = False,
                    help = 'Execute all unit tests')
+    opt.add_option('--checkone', action = 'store', default = False,
+                   help = 'Execute specified unit test')
 
 @feature('testt')
 @feature('gtest')
 @before('apply_core')
 def test_remover(self):
-    if not Options.options.check and not Options.options.checkall:
+    if not Options.options.check and not Options.options.checkall and self.target != Options.options.checkone:
         self.meths[:] = []
 
 @feature('testt')
@@ -112,6 +114,8 @@ old = cls.runnable_status
 def test_status(self):
     if Options.options.checkall:
         return RUN_ME
+    if Options.options.checkone == self.name:
+        return RUN_ME
     return old(self)
 
 cls.runnable_status = test_status
@@ -133,7 +137,7 @@ def summary(bld):
             Utils.pprint('GREEN', '    %s' % f)
 
     if fail>0:
-        Utils.pprint('RED', '  tests that pass %d/%d' % (fail, total))
+        Utils.pprint('RED', '  tests that fail %d/%d' % (fail, total))
         for (f, code, out, err) in lst:
             if code:
                 Utils.pprint('RED', '    %s' % f)
