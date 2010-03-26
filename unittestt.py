@@ -114,7 +114,7 @@ old = cls.runnable_status
 def test_status(self):
     if Options.options.checkall:
         return RUN_ME
-    if Options.options.checkone == self.name:
+    if Options.options.checkone == self.generator.name:
         return RUN_ME
     return old(self)
 
