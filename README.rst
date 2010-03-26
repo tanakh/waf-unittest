@@ -60,4 +60,10 @@ Usage
 
         $ waf build --checkall
 
-7. Enjoy!
+7. Build with a specified unittest and run it (always)
+
+   ::
+
+       $ waf build --checkone=test
+
+8. Enjoy!
