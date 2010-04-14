@@ -26,16 +26,13 @@ def set_options(opt):
     opt.add_option('--checkone', action = 'store', default = False,
                    help = 'Execute specified unit test')
 
-@feature('testt')
-@feature('gtest')
-@before('apply_core')
 def test_remover(self):
     if not Options.options.check and not Options.options.checkall and self.target != Options.options.checkone:
         self.meths[:] = []
 
-@feature('testt')
-@feature('gtest')
-@after('apply_link', 'vars_target_cprogram')
+feature('testt', 'gtest')(test_remover)
+before('apply_core')(test_remover)
+
 def make_test(self):
     if not 'cprogram' in self.features:
         Logs.error('test cannot be executed %s'%self)
@@ -43,8 +40,9 @@ def make_test(self):
     self.default_install_path = None
     self.create_task('utest', self.link_task.outputs)
 
-@feature('gtest')
-@before('apply_core')
+feature('testt', 'gtest')(make_test)
+after('apply_link', 'vars_target_cprogram')(make_test)
+
 def gtest_attach(self):
     if not self.env.HAVE_GTEST:
         Logs.error('gtest is not found')
@@ -55,6 +53,9 @@ def gtest_attach(self):
         self.uselib += " gtest"
     else:
         self.uselib.append('gtest')
+
+feature('gtest')(gtest_attach)
+before('apply_core')(gtest_attach)
 
 import threading
 testlock = threading.Lock()
