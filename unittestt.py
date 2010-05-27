@@ -10,13 +10,13 @@ def detect(conf):
     if conf.check_cfg(path = 'gtest-config',
                       args = '--cppflags --cxxflags --ldflags --libs',
                       package = '',
-                      uselib_store = 'gtest'):
+                      uselib_store = 'GTEST'):
         def f(str):
             if str == 'gtest':
                 return 'gtest_main'
             else:
                 return str
-        conf.env.LIB_gtest = map(f, conf.env.LIB_gtest)
+        conf.env.LIB_GTEST = map(f, conf.env.LIB_GTEST)
 
 def set_options(opt):
     opt.add_option('--check', action = 'store_true', default = False,
@@ -50,9 +50,9 @@ def gtest_attach(self):
         return
 
     if isinstance(self.uselib, str):
-        self.uselib += " gtest"
+        self.uselib += " GTEST"
     else:
-        self.uselib.append('gtest')
+        self.uselib.append('GTEST')
 
 feature('gtest')(gtest_attach)
 before('apply_core')(gtest_attach)
