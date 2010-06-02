@@ -70,4 +70,12 @@ Usage
 
        $ waf build --checkone=test
 
-8. Enjoy!
+8. Build with specified unittests by filter pattern (gtest style) and run it (always)
+
+   ::
+
+       $ waf build --checkfilter=test_target_name.tests.test
+       $ waf build --checkfilter=test_target_name.tests.*
+       $ waf build --checkfilter=*.tests.test
+
+9. Enjoy!
