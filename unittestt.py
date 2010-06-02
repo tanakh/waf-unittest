@@ -25,9 +25,19 @@ def set_options(opt):
                    help = 'Execute all unit tests')
     opt.add_option('--checkone', action = 'store', default = False,
                    help = 'Execute specified unit test')
+    opt.add_option('--checkfilter', action = 'store', default = False,
+                   help = 'Execute unit tests sprcified by pattern')
+
+def match_filter(filt, targ):
+    if isinstance(filt, str):
+        (pat, _, _) = filt.partition('.')
+        if pat == '*':
+            return True
+        return pat == targ
+    return False
 
 def test_remover(self):
-    if not Options.options.check and not Options.options.checkall and self.target != Options.options.checkone:
+    if not Options.options.check and not Options.options.checkall and self.target != Options.options.checkone and not match_filter(Options.options.checkfilter, self.target):
         self.meths[:] = []
 
 feature('testt', 'gtest')(test_remover)
@@ -86,8 +96,15 @@ def exec_test(self):
         else:
             add_path(fu, lst, 'LD_LIBRARY_PATH')
 
+    cmdline = [filename]
     cwd = self.inputs[0].parent.abspath(self.env)
-    proc = Utils.pproc.Popen(filename, cwd = cwd, env = fu,
+
+    if isinstance(Options.options.checkfilter, str):
+        (_, _, filt) = Options.options.checkfilter.partition('.')
+        if filt != "":
+            cmdline += ['--gtest_filter=' + filt]
+
+    proc = Utils.pproc.Popen(cmdline, cwd = cwd, env = fu,
                              stderr = Utils.pproc.PIPE,
                              stdout = Utils.pproc.PIPE)
     (stdout, stderr) = proc.communicate()
@@ -117,6 +134,9 @@ def test_status(self):
         return RUN_ME
     if Options.options.checkone == self.generator.name:
         return RUN_ME
+    if isinstance(Options.options.checkfilter, str):
+        if match_filter(Options.options.checkfilter, self.generator.name):
+            return RUN_ME
     return old(self)
 
 cls.runnable_status = test_status
@@ -136,6 +156,8 @@ def summary(bld):
     for (f, code, out, err) in lst:
         if not code:
             Utils.pprint('GREEN', '    %s' % f)
+            if isinstance(Options.options.checkfilter, str):
+                print(out)
 
     if fail>0:
         Utils.pprint('RED', '  tests that fail %d/%d' % (fail, total))
