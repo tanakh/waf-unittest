@@ -6,6 +6,9 @@ import Options, Task, Utils, Logs
 from TaskGen import before, after, feature
 from Constants import *
 
+class TestError(Utils.WafError):
+    pass
+
 def detect(conf):
     if conf.check_cfg(path = 'gtest-config',
                       args = '--cppflags --cxxflags --ldflags --libs',
@@ -165,3 +168,4 @@ def summary(bld):
             if code:
                 Utils.pprint('RED', '    %s' % f)
                 print(out)
+        raise TestError('test failed')
