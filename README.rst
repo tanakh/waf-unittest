@@ -15,36 +15,33 @@ Usage
    ::
     
         def set_options(opt):
-            opt.tool_options('compiler_cxx')
-            opt.tool_options('unittestt')
+            opt.load('compiler_cxx unittestt')
     
    ::
     
         def configure(conf):
-            conf.check_tool('compiler_cxx')
-            conf.check_tool('unittestt')
+            conf.load('compiler_cxx unittestt')
 
 3. Add 'testt' or 'gtest' to your test program's feature.
 
    ::
     
         def build(bld):
-            bld(features = 'cxx cprogram testt',
-                source = 'test.cpp',
-                includes = '.',
-                target = 'test',
-                uselib_local = 'lib',
-		uselib = 'gtest')
+            bld.program(features = 'testt',
+                        source = 'test.cpp',
+                        includes = '.',
+                        target = 'test',
+                        use = 'lib GTEST')
 
    ::
     
         # autolink gtest_main
         def build(bld):
-            bld(features = 'cxx cprogram gtest',
-                source = 'test.cpp',
-                includes = '.',
-                target = 'test',
-                uselib_local = 'lib')
+            bld.program(features = 'gtest',
+                        source = 'test.cpp',
+                        includes = '.',
+                        target = 'test',
+                        use = 'lib')
 
 4. Build without unittests
 

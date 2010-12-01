@@ -2,34 +2,32 @@
 APPNAME = 'waf_unittest'
 VERSION = '0.0.0'
 
-srcdir = '.'
-blddir = 'build'
+top = '.'
+out = 'build'
 
-def set_options(opt):
-    opt.tool_options('compiler_cxx')
-    opt.tool_options('unittestt')
+def options(opt):
+    opt.load('compiler_cxx unittestt')
 
 def configure(conf):
-    conf.check_tool('compiler_cxx')
-    conf.check_tool('unittestt')
+    conf.load('compiler_cxx unittestt')
 
 def build(bld):
-    bld(features = 'cxx cshlib',
+    bld.stlib(
         source = 'lib.cpp',
         includes = '.',
         target = 'lib')
 
-    bld(features = 'cxx cprogram gtest',
-        source = 'test.cpp',
-        includes = '.',
-        target = 'test',
-        uselib_local = 'lib')
+    bld.program(features = 'gtest',
+                source = 'test.cpp',
+                includes = '.',
+                target = 'test',
+                use = 'lib')
 
-    bld(features = 'cxx cprogram gtest',
-        source = 'test2.cpp',
-        includes = '.',
-        target = 'test2',
-        uselib_local = 'lib')
+    bld.program(features = 'gtest',
+                source = 'test2.cpp',
+                includes = '.',
+                target = 'test2',
+                use = 'lib')
 
 def shutdown(ctx):
     pass
