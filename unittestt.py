@@ -9,7 +9,8 @@ def configure(conf):
     if conf.check_cfg(path = 'gtest-config',
                       args = '--cppflags --cxxflags --ldflags --libs',
                       package = '',
-                      uselib_store = 'GTEST'):
+                      uselib_store = 'GTEST',
+                      mandatory = False):
         def f(str):
             if str == 'gtest':
                 return 'gtest_main'
