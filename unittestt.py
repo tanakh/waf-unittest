@@ -9,14 +9,13 @@ def configure(conf):
     if conf.check_cfg(path = 'gtest-config',
                       args = '--cppflags --cxxflags --ldflags --libs',
                       package = '',
-                      uselib_store = 'GTEST',
-                      mandatory = False):
-        def f(str):
-            if str == 'gtest':
-                return 'gtest_main'
-            else:
-                return str
-        conf.env.LIB_GTEST = map(f, conf.env.LIB_GTEST)
+                      uselib_store = 'GTEST'):
+        t = conf.env.LIB_GTEST
+        conf.env.LIB_GTEST = []
+        for l in t:
+            if l == 'gtest':
+                l = 'gtest_main'
+            conf.env.LIB_GTEST.append(l)
 
 def options(opt):
     opt.add_option('--check', action = 'store_true', default = False,
@@ -174,5 +173,5 @@ def summary(bld):
         for (f, code, out, err) in lst:
             if code:
                 Logs.pprint('RED', '    %s' % f)
-                print(out)
+                print(out.decode())
         raise Errors.WafError('test failed')
