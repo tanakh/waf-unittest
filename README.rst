@@ -10,11 +10,11 @@ Usage
 
        $ wget http://github.com/tanakh/waf-unittest/raw/master/unittestt.py
 
-2. Add tool_options() and check_tool()
+2. Add load('unittestt') to options() and configure().
 
    ::
     
-        def set_options(opt):
+        def options(opt):
             opt.load('compiler_cxx unittestt')
     
    ::
