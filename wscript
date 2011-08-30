@@ -6,10 +6,10 @@ top = '.'
 out = 'build'
 
 def options(opt):
-    opt.load('compiler_cxx unittestt')
+    opt.load('compiler_cxx unittest_gtest')
 
 def configure(conf):
-    conf.load('compiler_cxx unittestt')
+    conf.load('compiler_cxx unittest_gtest')
 
 def build(bld):
     bld.stlib(

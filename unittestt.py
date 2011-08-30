@@ -1,21 +1,69 @@
-#! /usr/bin/env python
-# encoding: utf-8
+#!/usr/bin/env python
+# encoding: ISO8859-1
 
-import os, sys
+import os, subprocess, sys
 from waflib.TaskGen import before, after, feature
 from waflib import Options, Task, Utils, Logs, Errors
 
+C1 = b'#XXX'
+C2 = b'#YYY'
+UNPACK_DIR = '.unittest-gtest'
+GTEST_DIR = 'gtest-1.6.0/fused-src'
+
+
+def cleanup():
+  import shutil
+  try: shutil.rmtree(UNPACK_DIR)
+  except OSError: pass
+
+def unpack_gtest():
+  cwd = os.getcwd()
+
+  f = open(__file__, 'rb')
+
+  while 1:
+    line = f.readline()
+    if not line:
+      Logs.error('not contain gtest archive')
+    if line == b'#==>\n':
+      txt = f.readline()
+      if not txt:
+        Logs.error('corrupt archive')
+      if f.readline() != b'#<==\n':
+        Logs.error('corrupt archive')
+      break
+
+  txt = txt[1:-1].replace(C1, b'\n').replace(C2, b'\r')
+
+  cleanup()
+
+  tmp = 't.tar.bz2'
+
+  os.makedirs(UNPACK_DIR)
+  os.chdir(UNPACK_DIR)
+  t = open(tmp, 'wb')
+  t.write(txt)
+  t.close()
+
+  try:
+    subprocess.check_call(['tar',  'xf', tmp])
+  except:
+    os.chdir(cwd)
+    cleanup()
+    Logs.error('gtest cannot be unpacked.')
+
+  os.unlink(tmp)
+  os.chdir(cwd)
+
 def configure(conf):
-    if conf.check_cfg(path = 'gtest-config',
-                      args = '--cppflags --cxxflags --ldflags --libs',
-                      package = '',
-                      uselib_store = 'GTEST'):
-        t = conf.env.LIB_GTEST
-        conf.env.LIB_GTEST = []
-        for l in t:
-            if l == 'gtest':
-                l = 'gtest_main'
-            conf.env.LIB_GTEST.append(l)
+    try:
+      unpack_gtest()
+      conf.msg('Unpacking gtest', 'yes')
+    except:
+      conf.msg('Unpacking gtest', 'no')
+      Logs.error(sys.exc_info()[1])
+
+    conf.check_cxx(lib = 'pthread', uselib_store = 'GTEST_PTHREAD')
 
 def options(opt):
     opt.add_option('--check', action = 'store_true', default = False,
@@ -42,19 +90,14 @@ def test_remover(self):
         self.meths[:] = []
 
 @feature('gtest')
-@before('apply_core')
+@before('process_source')
 def gtest_attach(self):
-    if not self.env.HAVE_GTEST:
-        Logs.error('gtest is not found')
-        self.meths[:] = []
-        return
-
-    if not hasattr(self, 'use'):
-        self.use = 'GTEST'
-    elif isinstance(self.use, str):
-        self.use += ' GTEST'
-    else:
-        self.use.append('GTEST')
+    DIR = UNPACK_DIR + '/' + GTEST_DIR
+    self.source = self.to_list(getattr(self, 'source', [])) + [
+      DIR + '/gtest/gtest-all.cc',
+      DIR + '/gtest/gtest_main.cc']
+    self.includes = self.to_list(getattr(self, 'includes', [])) + [DIR]
+    self.use = self.to_list(getattr(self, 'use', [])) + ['GTEST_PTHREAD']
 
 @feature('testt', 'gtest')
 @after('apply_link')
@@ -180,3 +223,4 @@ def summary(bld):
                 Logs.pprint('RED', '    %s' % f)
                 print(out.decode())
         raise Errors.WafError('test failed')
+
