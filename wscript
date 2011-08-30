@@ -1,6 +1,6 @@
 
 APPNAME = 'waf_unittest'
-VERSION = '0.0.0'
+VERSION = '0.1.0'
 
 top = '.'
 out = 'build'
