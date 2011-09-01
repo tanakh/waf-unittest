@@ -96,16 +96,15 @@ def test_remover(self):
 @feature('gtest')
 @before('process_source')
 def gtest_attach(self):
-    DIR = os.path.relpath(self.env.UNITTEST_GTEST_PATH, self.path.abspath()) + '/' + GTEST_DIR
-
     if not hasattr(self.bld, 'def_gtest_objects'):
       self.bld.objects(
-        source = [DIR + '/gtest/gtest-all.cc',
-                  DIR + '/gtest/gtest_main.cc'],
+        source = [UNPACK_DIR + '/' + GTEST_DIR + '/gtest/gtest-all.cc',
+                  UNPACK_DIR + '/' + GTEST_DIR + '/gtest/gtest_main.cc'],
         target = 'GTEST_OBJECTS'
         )
       self.bld.def_gtest_objects = True
 
+    DIR = os.path.relpath(self.env.UNITTEST_GTEST_PATH, self.path.abspath()) + '/' + GTEST_DIR
     self.includes = self.to_list(getattr(self, 'includes', [])) + [DIR]
     self.use = self.to_list(getattr(self, 'use', [])) + ['GTEST_PTHREAD', 'GTEST_OBJECTS']
 
