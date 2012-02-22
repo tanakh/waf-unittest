@@ -265,6 +265,6 @@ def summary(bld):
         for (f, code, out, err) in lst:
             if code:
                 Logs.pprint('RED', '    %s' % f)
-                print(out.decode())
+                print(out.decode('utf-8'))
         raise Errors.WafError('test failed')
 
