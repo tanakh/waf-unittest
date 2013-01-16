@@ -38,8 +38,8 @@ import os, subprocess, sys
 from waflib.TaskGen import before, after, feature
 from waflib import Options, Task, Utils, Logs, Errors
 
-C1 = b'#XXX'
-C2 = b'#YYY'
+C1 = '#XXX'.encode()
+C2 = '#YYY'.encode()
 UNPACK_DIR = '.unittest-gtest'
 GTEST_DIR = 'gtest-1.6.0/fused-src'
 
@@ -61,15 +61,15 @@ def unpack_gtest(conf):
     if not line:
       Logs.error('not contain gtest archive')
       sys.exit(1)
-    if line == b'#==>\n':
+    if line == '#==>\n'.encode():
       txt = f.readline()
       if not txt:
         Logs.error('corrupt archive')
-      if f.readline() != b'#<==\n':
+      if f.readline() != '#<==\n'.encode():
         Logs.error('corrupt archive')
       break
 
-  txt = txt[1:-1].replace(C1, b'\n').replace(C2, b'\r')
+  txt = txt[1:-1].replace(C1, '\n'.encode()).replace(C2, '\r'.encode())
 
   cleanup()
 
@@ -139,7 +139,7 @@ def gtest_attach(self):
         )
       self.bld.def_gtest_objects = True
 
-    DIR = os.path.relpath(self.env.UNITTEST_GTEST_PATH, self.path.abspath()) + '/' + GTEST_DIR
+    DIR = self.env.UNITTEST_GTEST_PATH + '/' + GTEST_DIR
     self.includes = self.to_list(getattr(self, 'includes', [])) + [DIR]
     self.use = self.to_list(getattr(self, 'use', [])) + ['GTEST_PTHREAD', 'GTEST_OBJECTS']
 
