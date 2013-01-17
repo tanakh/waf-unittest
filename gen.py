@@ -8,8 +8,8 @@ DEST_NAME = 'unittest_gtest.py'
 TARBALL_NAME = 'fused-gtest.tar.bz2'
 GTEST_DIR = 'gtest-1.6.0/fused-src/gtest'
 
-C1 = b'#XXX'
-C2 = b'#YYY'
+C1 = '#XXX'.encode()
+C2 = '#YYY'.encode()
 
 try:
   subprocess.check_call(['tar', 'cjf', TARBALL_NAME, GTEST_DIR])
@@ -22,9 +22,9 @@ try:
   tbz = t.read()
   t.close()
 
-  scr += b'#==>\n#'
-  scr += tbz.replace(b'\n', C1).replace(b'\r', C2)
-  scr += b'\n#<==\n'
+  scr += '#==>\n#'.encode()
+  scr += tbz.replace('\n'.encode(), C1).replace('\r'.encode(), C2)
+  scr += '\n#<==\n'.encode()
 
   t = open(DEST_NAME, 'wb')
   t.write(scr)
