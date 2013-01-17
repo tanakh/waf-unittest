@@ -12,7 +12,8 @@ C1 = '#XXX'.encode()
 C2 = '#YYY'.encode()
 
 try:
-  subprocess.check_call(['tar', 'cjf', TARBALL_NAME, GTEST_DIR])
+  if subprocess.call(['tar', 'cjf', TARBALL_NAME, GTEST_DIR]):
+    raise
 
   t = open(TMPL_NAME, 'rb')
   scr = t.read()
