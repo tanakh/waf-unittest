@@ -81,10 +81,14 @@ def unpack_gtest(conf):
   t.write(txt)
   t.close()
 
+  def check_call(args):
+    if subprocess.call(args):
+      raise
+
   try:
-    subprocess.check_call(['tar',  'xf', tmp])
-    subprocess.check_call(['mkdir', GTEST_DIR + '/gtest/gtest'])
-    subprocess.check_call(['cp', GTEST_DIR + '/gtest/gtest.h', GTEST_DIR + '/gtest/gtest/gtest.h'])
+    check_call(['tar',  'xf', tmp])
+    check_call(['mkdir', GTEST_DIR + '/gtest/gtest'])
+    check_call(['cp', GTEST_DIR + '/gtest/gtest.h', GTEST_DIR + '/gtest/gtest/gtest.h'])
   except:
     os.chdir(cwd)
     cleanup()
