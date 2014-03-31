@@ -6,7 +6,7 @@ import os, subprocess, sys
 TMPL_NAME = 'unittestt.py'
 DEST_NAME = 'unittest_gtest.py'
 TARBALL_NAME = 'fused-gtest.tar.bz2'
-GTEST_DIR = 'gtest-1.6.0/fused-src/gtest'
+GTEST_DIR = 'gtest-1.7.0/fused-src/gtest'
 
 C1 = '#XXX'.encode()
 C2 = '#YYY'.encode()

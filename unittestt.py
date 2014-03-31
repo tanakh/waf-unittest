@@ -41,7 +41,7 @@ from waflib import Options, Task, Utils, Logs, Errors
 C1 = '#XXX'.encode()
 C2 = '#YYY'.encode()
 UNPACK_DIR = '.unittest-gtest'
-GTEST_DIR = 'gtest-1.6.0/fused-src'
+GTEST_DIR = 'gtest-1.7.0/fused-src'
 
 def cleanup():
   import shutil
