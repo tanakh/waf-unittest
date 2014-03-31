@@ -5,7 +5,7 @@ About
 -----
 
 This is unittest module for waf with builtin google-gtest support.
-This includes gtest-1.6.0, so you can use gtest without install.
+This includes gtest-1.7.0, so you can use gtest without install.
 
 Usage
 -----
