@@ -224,10 +224,10 @@ class utest(Task.Task):
                 self.ut_exec += ['--gtest_filter=' + filt]
 
         cwd = getattr(self.generator, 'ut_cwd', '') or self.inputs[0].parent.abspath()
-        proc = Utils.subprocess.Popen(self.ut_exec, cwd=cwd, env=fu, stderr=Utils.subprocess.PIPE, stdout=Utils.subprocess.PIPE)
-        (stdout, stderr) = proc.communicate()
+        proc = Utils.subprocess.Popen(self.ut_exec, cwd=cwd, env=fu, stderr=Utils.subprocess.STDOUT, stdout=Utils.subprocess.PIPE)
+        (output, _) = proc.communicate()
 
-        tup = (filename, proc.returncode, stdout, stderr)
+        tup = (filename, proc.returncode, output)
         self.generator.utest_result = tup
         
         testlock.acquire()
@@ -258,7 +258,7 @@ def summary(bld):
     Logs.pprint('CYAN', 'test summary')
     Logs.pprint('CYAN', '  tests that pass %d/%d' % (total-fail, total))
 
-    for (f, code, out, err) in lst:
+    for (f, code, out) in lst:
         if not code:
             Logs.pprint('GREEN', '    %s' % f)
             if isinstance(Options.options.checkfilter, str):
@@ -266,7 +266,7 @@ def summary(bld):
 
     if fail>0:
         Logs.pprint('RED', '  tests that fail %d/%d' % (fail, total))
-        for (f, code, out, err) in lst:
+        for (f, code, out) in lst:
             if code:
                 Logs.pprint('RED', '    %s' % f)
                 print(out.decode('utf-8'))
