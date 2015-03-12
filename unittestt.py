@@ -117,7 +117,7 @@ def options(opt):
                    help = 'Execute specified unit test')
     opt.add_option('--checkfilter', action = 'store', default = False,
                    help = 'Execute unit tests sprcified by pattern')
-    opt.add_option('--checkleak', action = 'store', default = False,
+    opt.add_option('--checkleak', action = 'store_true', default = False,
                    help = 'Execute unit tests with valgrind')
 
 def match_filter(filt, targ):
