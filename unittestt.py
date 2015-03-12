@@ -117,6 +117,8 @@ def options(opt):
                    help = 'Execute specified unit test')
     opt.add_option('--checkfilter', action = 'store', default = False,
                    help = 'Execute unit tests sprcified by pattern')
+    opt.add_option('--checkleak', action = 'store', default = False,
+                   help = 'Execute unit tests with valgrind')
 
 def match_filter(filt, targ):
     if isinstance(filt, str):
@@ -129,7 +131,7 @@ def match_filter(filt, targ):
 @feature('testt', 'gtest')
 @before('process_rule')
 def test_remover(self):
-    if not Options.options.check and not Options.options.checkall and self.target != Options.options.checkone and not match_filter(Options.options.checkfilter, self.target):
+    if not Options.options.check and not Options.options.checkall and self.target != Options.options.checkone and not match_filter(Options.options.checkfilter, self.target) and not Options.options.checkleak:
         self.meths[:] = []
 
 @feature('gtest')
@@ -172,7 +174,7 @@ class utest(Task.Task):
         if stat != Task.SKIP_ME:
             return stat
 
-        if Options.options.checkall:
+        if Options.options.checkall or Options.options.checkleak:
             return Task.RUN_ME
         if Options.options.checkone == self.generator.name:
             return Task.RUN_ME
@@ -223,6 +225,12 @@ class utest(Task.Task):
             (_, _, filt) = Options.options.checkfilter.partition('.')
             if filt != "":
                 self.ut_exec += ['--gtest_filter=' + filt]
+
+        if Options.options.checkleak:
+          self.ut_exec.insert(0, 'valgrind')
+          self.ut_exec.insert(1, '--error-exitcode=1')
+          self.ut_exec.insert(2, '--leak-check=full')
+          self.ut_exec.insert(3, '--show-reachable=yes')
 
         cwd = getattr(self.generator, 'ut_cwd', '') or self.inputs[0].parent.abspath()
         proc = Utils.subprocess.Popen(self.ut_exec, cwd=cwd, env=fu, stderr=Utils.subprocess.STDOUT, stdout=Utils.subprocess.PIPE)
