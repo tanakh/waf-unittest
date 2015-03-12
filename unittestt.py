@@ -236,7 +236,7 @@ class utest(Task.Task):
         proc = Utils.subprocess.Popen(self.ut_exec, cwd=cwd, env=fu, stderr=Utils.subprocess.STDOUT, stdout=Utils.subprocess.PIPE)
         (output, _) = proc.communicate()
 
-        tup = (filename, proc.returncode, stdout, output)
+        tup = (filename, proc.returncode, output)
         self.generator.utest_result = tup
         
         testlock.acquire()
